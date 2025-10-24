@@ -1,7 +1,92 @@
+'use client'
+
+import { useState } from 'react'
 import Image from 'next/image'
-import Link from 'next/link'
+
+interface SearchResult {
+  title: string
+  snippet: string
+  confidence: number
+  relevance_score: number
+  expanded_content?: string
+  hallucination_risk: string
+}
+
+interface SearchResponse {
+  query: string
+  results: SearchResult[]
+  processing_time: number
+  model_used: string
+  knowledge_cutoff: string
+  warning?: string
+}
 
 export default function Home() {
+  const [query, setQuery] = useState('')
+  const [results, setResults] = useState<SearchResult[]>([])
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
+  const [expandedResults, setExpandedResults] = useState<Set<number>>(new Set())
+
+  const handleSearch = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!query.trim()) return
+
+    setLoading(true)
+    setError('')
+    setResults([])
+
+    try {
+      const response = await fetch('http://localhost:8000/search', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          query: query.trim(),
+          num_results: 5,
+          temperature: 0.3
+        }),
+      })
+
+      if (!response.ok) {
+        throw new Error(`Search failed: ${response.statusText}`)
+      }
+
+      const data: SearchResponse = await response.json()
+      setResults(data.results)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Search failed')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const toggleExpanded = (index: number) => {
+    const newExpanded = new Set(expandedResults)
+    if (newExpanded.has(index)) {
+      newExpanded.delete(index)
+    } else {
+      newExpanded.add(index)
+    }
+    setExpandedResults(newExpanded)
+  }
+
+  const getConfidenceColor = (confidence: number) => {
+    if (confidence >= 80) return 'text-green-600'
+    if (confidence >= 60) return 'text-yellow-600'
+    return 'text-red-600'
+  }
+
+  const getRiskColor = (risk: string) => {
+    switch (risk.toLowerCase()) {
+      case 'low': return 'text-green-600'
+      case 'medium': return 'text-yellow-600'
+      case 'high': return 'text-red-600'
+      default: return 'text-gray-600'
+    }
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-cream-light to-cream">
       {/* Header */}
@@ -18,226 +103,168 @@ export default function Home() {
               />
               <span className="text-xl font-bold text-brown-dark">ALTIPLANO</span>
             </div>
-            <div className="hidden md:flex space-x-8">
-              <Link href="#what" className="text-brown-mid hover:text-orange font-medium transition-colors">
-                What
-              </Link>
-              <Link href="#features" className="text-brown-mid hover:text-orange font-medium transition-colors">
-                Features
-              </Link>
-              <Link href="#download" className="text-brown-mid hover:text-orange font-medium transition-colors">
-                Download
-              </Link>
-              <Link 
-                href="https://github.com/bohselecta/altiplano" 
-                target="_blank"
-                className="text-brown-mid hover:text-orange font-medium transition-colors"
-              >
-                GitHub
-              </Link>
+            <div className="text-sm text-brown-mid">
+              Parametric Knowledge Search
             </div>
           </div>
         </nav>
       </header>
 
-      {/* Hero Section */}
-      <section className="pt-24 pb-16 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto text-center">
-          <div className="mb-8">
-            <div className="inline-flex items-center justify-center w-48 h-48 bg-white rounded-full shadow-2xl mb-8">
-              <Image
-                src="/altiplano-graphic-mark-logo.svg"
-                alt="Altiplano Logo"
-                width={140}
-                height={140}
-                className="w-36 h-36"
-              />
+      {/* Main Content */}
+      <main className="pt-24 pb-16 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-4xl mx-auto">
+          {/* Search Section */}
+          <div className="text-center mb-12">
+            <div className="mb-8">
+              <div className="inline-flex items-center justify-center w-32 h-32 bg-white rounded-full shadow-2xl mb-6">
+                <Image
+                  src="/altiplano-graphic-mark-logo.svg"
+                  alt="Altiplano Logo"
+                  width={80}
+                  height={80}
+                  className="w-20 h-20"
+                />
+              </div>
             </div>
-          </div>
-          
-          <h1 className="text-6xl md:text-7xl font-extrabold text-brown-dark mb-6 tracking-tight">
-            ALTIPLANO
-          </h1>
-          
-          <p className="text-xl md:text-2xl text-brown-mid mb-12 max-w-3xl mx-auto">
-            Search your knowledge, not the web
-          </p>
-          
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              href="#download"
-              className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-orange to-orange-light text-white font-semibold rounded-full hover:from-orange/90 hover:to-orange-light/90 transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg"
-            >
-              Download Free
-              <svg className="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-              </svg>
-            </Link>
-            <Link
-              href="#what"
-              className="inline-flex items-center px-8 py-4 bg-white text-brown-dark font-semibold rounded-full border-2 border-brown-dark hover:bg-brown-dark hover:text-white transition-all duration-300"
-            >
-              Learn More
-            </Link>
-          </div>
-        </div>
-      </section>
+            
+            <h1 className="text-5xl md:text-6xl font-extrabold text-brown-dark mb-6 tracking-tight">
+              ALTIPLANO
+            </h1>
+            
+            <p className="text-xl md:text-2xl text-brown-mid mb-12 max-w-2xl mx-auto">
+              Search your knowledge, not the web
+            </p>
+            
+            {/* Search Form */}
+            <form onSubmit={handleSearch} className="max-w-2xl mx-auto">
+              <div className="relative">
+                <input
+                  type="text"
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  placeholder="Ask anything about history, science, concepts..."
+                  className="w-full px-6 py-4 text-lg border-2 border-brown-mid/30 rounded-full focus:border-orange focus:outline-none transition-colors"
+                  disabled={loading}
+                />
+                <button
+                  type="submit"
+                  disabled={loading || !query.trim()}
+                  className="absolute right-2 top-2 bottom-2 px-6 bg-gradient-to-r from-orange to-orange-light text-white font-semibold rounded-full hover:from-orange/90 hover:to-orange-light/90 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {loading ? 'Searching...' : 'Search'}
+                </button>
+              </div>
+            </form>
 
-      {/* What Section */}
-      <section id="what" className="py-20 bg-white">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-4xl md:text-5xl font-bold text-brown-dark mb-8">What is Altiplano?</h2>
-          <p className="text-lg md:text-xl text-brown-mid leading-relaxed">
-            Altiplano is a <span className="text-orange font-semibold">parametric knowledge search engine</span> powered by 
-            advanced AI guardrails. It searches through an LLM's training knowledge—not the web—with 
-            <span className="text-orange font-semibold"> sophisticated prompt priming</span> that ensures honest, calibrated results. 
-            Completely <span className="text-orange font-semibold">private</span>, runs <span className="text-orange font-semibold">offline</span>, 
-            and shows confidence scores with hallucination detection. Think of it as Wikipedia with a conscience.
-          </p>
-        </div>
-      </section>
+            {/* Example Queries */}
+            <div className="mt-8">
+              <p className="text-sm text-brown-mid mb-4">Try these examples:</p>
+              <div className="flex flex-wrap justify-center gap-2">
+                {[
+                  'What is quantum mechanics?',
+                  'Who was Leonardo da Vinci?',
+                  'Explain photosynthesis',
+                  'History of ancient Rome'
+                ].map((example) => (
+                  <button
+                    key={example}
+                    onClick={() => setQuery(example)}
+                    className="px-4 py-2 text-sm bg-white/50 text-brown-mid rounded-full hover:bg-white hover:text-brown-dark transition-colors"
+                  >
+                    {example}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
 
-      {/* Features Section */}
-      <section id="features" className="py-20 bg-gradient-to-br from-cream-light to-cream">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-4xl md:text-5xl font-bold text-brown-dark text-center mb-16">Why Altiplano?</h2>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <div className="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-shadow">
-              <div className="w-16 h-16 bg-gradient-to-r from-orange to-orange-light rounded-2xl flex items-center justify-center text-2xl mb-6">
-                🔒
-              </div>
-              <h3 className="text-xl font-semibold text-brown-dark mb-4">Completely Private</h3>
-              <p className="text-brown-mid">Zero data collection. Your searches never leave your machine. No tracking, no analytics, no cloud.</p>
+          {/* Error Message */}
+          {error && (
+            <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-8">
+              <p className="text-red-800">{error}</p>
+              <p className="text-sm text-red-600 mt-2">
+                Make sure the ParaSearch backend is running on localhost:8000
+              </p>
             </div>
-            
-            <div className="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-shadow">
-              <div className="w-16 h-16 bg-gradient-to-r from-orange to-orange-light rounded-2xl flex items-center justify-center text-2xl mb-6">
-                ⚡
-              </div>
-              <h3 className="text-xl font-semibold text-brown-dark mb-4">Lightning Fast</h3>
-              <p className="text-brown-mid">Local processing means instant results. No network latency, no waiting for servers to respond.</p>
+          )}
+
+          {/* Results */}
+          {results.length > 0 && (
+            <div className="space-y-6">
+              <h2 className="text-2xl font-bold text-brown-dark mb-6">
+                Search Results ({results.length})
+              </h2>
+              
+              {results.map((result, index) => (
+                <div key={index} className="bg-white rounded-2xl shadow-lg p-6 hover:shadow-xl transition-shadow">
+                  <div className="flex justify-between items-start mb-4">
+                    <h3 className="text-xl font-semibold text-brown-dark flex-1">
+                      {result.title}
+                    </h3>
+                    <div className="flex space-x-4 text-sm">
+                      <span className={`font-medium ${getConfidenceColor(result.confidence)}`}>
+                        {result.confidence}% confidence
+                      </span>
+                      <span className={`font-medium ${getRiskColor(result.hallucination_risk)}`}>
+                        {result.hallucination_risk} risk
+                      </span>
+                      <span className="text-brown-mid">
+                        Score: {result.relevance_score}/10
+                      </span>
+                    </div>
+                  </div>
+                  
+                  <p className="text-brown-mid mb-4 leading-relaxed">
+                    {result.snippet}
+                  </p>
+                  
+                  {result.expanded_content && (
+                    <div>
+                      <button
+                        onClick={() => toggleExpanded(index)}
+                        className="text-orange hover:text-orange-light font-medium transition-colors"
+                      >
+                        {expandedResults.has(index) ? 'Show Less' : 'Show More'}
+                      </button>
+                      
+                      {expandedResults.has(index) && (
+                        <div className="mt-4 p-4 bg-cream-light rounded-lg">
+                          <p className="text-brown-mid leading-relaxed">
+                            {result.expanded_content}
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              ))}
             </div>
-            
-            <div className="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-shadow">
-              <div className="w-16 h-16 bg-gradient-to-r from-orange to-orange-light rounded-2xl flex items-center justify-center text-2xl mb-6">
-                🛡️
+          )}
+
+          {/* Info Section */}
+          <div className="mt-16 bg-white rounded-2xl shadow-lg p-8">
+            <h2 className="text-2xl font-bold text-brown-dark mb-6">About Altiplano</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div>
+                <h3 className="text-lg font-semibold text-brown-dark mb-3">🔒 Completely Private</h3>
+                <p className="text-brown-mid">Zero data collection. Your searches never leave your machine.</p>
               </div>
-              <h3 className="text-xl font-semibold text-brown-dark mb-4">Advanced Guardrails</h3>
-              <p className="text-brown-mid">Constitutional AI with prompt priming, risk analysis, and confidence calibration. Prevents hallucinations through sophisticated behavioral programming.</p>
-            </div>
-            
-            <div className="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-shadow">
-              <div className="w-16 h-16 bg-gradient-to-r from-orange to-orange-light rounded-2xl flex items-center justify-center text-2xl mb-6">
-                📚
+              <div>
+                <h3 className="text-lg font-semibold text-brown-dark mb-3">⚡ Lightning Fast</h3>
+                <p className="text-brown-mid">Local processing means instant results with no network latency.</p>
               </div>
-              <h3 className="text-xl font-semibold text-brown-dark mb-4">Pure Knowledge</h3>
-              <p className="text-brown-mid">Searches the AI's training knowledge. Great for history, science, concepts, and explanations.</p>
-            </div>
-            
-            <div className="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-shadow">
-              <div className="w-16 h-16 bg-gradient-to-r from-orange to-orange-light rounded-2xl flex items-center justify-center text-2xl mb-6">
-                🌐
+              <div>
+                <h3 className="text-lg font-semibold text-brown-dark mb-3">🛡️ Advanced Guardrails</h3>
+                <p className="text-brown-mid">Constitutional AI with confidence scoring and hallucination detection.</p>
               </div>
-              <h3 className="text-xl font-semibold text-brown-dark mb-4">Works Offline</h3>
-              <p className="text-brown-mid">No internet required once installed. Perfect for travel, remote work, or sensitive environments.</p>
-            </div>
-            
-            <div className="bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-shadow">
-              <div className="w-16 h-16 bg-gradient-to-r from-orange to-orange-light rounded-2xl flex items-center justify-center text-2xl mb-6">
-                🛠️
+              <div>
+                <h3 className="text-lg font-semibold text-brown-dark mb-3">📚 Pure Knowledge</h3>
+                <p className="text-brown-mid">Searches AI training knowledge - great for history, science, and concepts.</p>
               </div>
-              <h3 className="text-xl font-semibold text-brown-dark mb-4">Developer Friendly</h3>
-              <p className="text-brown-mid">Open source, fully documented API, easy to customize and extend for your needs.</p>
             </div>
           </div>
         </div>
-      </section>
-
-      {/* Download Section */}
-      <section id="download" className="py-20 bg-brown-dark text-white">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-4xl font-bold mb-4">Get Altiplano</h2>
-          <p className="text-xl text-cream mb-12">Version 1.0.0 • Free & Open Source</p>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <Link
-              href="https://github.com/bohselecta/altiplano"
-              target="_blank"
-              className="bg-white/10 backdrop-blur-sm p-8 rounded-2xl border border-orange/30 hover:bg-orange/20 transition-all duration-300 hover:-translate-y-1"
-            >
-              <div className="text-4xl mb-4">📦</div>
-              <div className="text-xl font-semibold mb-2">Source Code</div>
-              <div className="text-cream">GitHub Repository</div>
-            </Link>
-            
-            <Link
-              href="https://github.com/bohselecta/altiplano/archive/main.zip"
-              target="_blank"
-              className="bg-white/10 backdrop-blur-sm p-8 rounded-2xl border border-orange/30 hover:bg-orange/20 transition-all duration-300 hover:-translate-y-1"
-            >
-              <div className="text-4xl mb-4">⬇️</div>
-              <div className="text-xl font-semibold mb-2">Download ZIP</div>
-              <div className="text-cream">Complete Package</div>
-            </Link>
-            
-            <Link
-              href="https://github.com/bohselecta/altiplano/blob/main/parasearch/README.md"
-              target="_blank"
-              className="bg-white/10 backdrop-blur-sm p-8 rounded-2xl border border-orange/30 hover:bg-orange/20 transition-all duration-300 hover:-translate-y-1"
-            >
-              <div className="text-4xl mb-4">🔧</div>
-              <div className="text-xl font-semibold mb-2">Setup Guide</div>
-              <div className="text-cream">5-minute install</div>
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* Requirements Section */}
-      <section className="py-20 bg-white">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-4xl md:text-5xl font-bold text-brown-dark text-center mb-16">What You'll Need</h2>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-            <div>
-              <h4 className="text-orange text-xl font-semibold mb-4">Ollama</h4>
-              <p className="text-brown-mid">Free local AI runtime<br />Download from ollama.com</p>
-            </div>
-            <div>
-              <h4 className="text-orange text-xl font-semibold mb-4">8GB+ RAM</h4>
-              <p className="text-brown-mid">Minimum recommended<br />16GB for best experience</p>
-            </div>
-            <div>
-              <h4 className="text-orange text-xl font-semibold mb-4">Python 3.9+</h4>
-              <p className="text-brown-mid">For running the backend<br />Usually pre-installed</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Footer */}
-      <footer className="bg-brown-dark text-white py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <div className="flex space-x-8 mb-4 md:mb-0">
-              <Link href="https://github.com/bohselecta/altiplano" target="_blank" className="hover:text-yellow transition-colors">
-                GitHub
-              </Link>
-              <Link href="https://github.com/bohselecta/altiplano/blob/main/parasearch/README.md" target="_blank" className="hover:text-yellow transition-colors">
-                Documentation
-              </Link>
-              <Link href="https://github.com/bohselecta/altiplano/discussions" target="_blank" className="hover:text-yellow transition-colors">
-                Community
-              </Link>
-              <Link href="https://github.com/bohselecta/altiplano/issues" target="_blank" className="hover:text-yellow transition-colors">
-                Support
-              </Link>
-            </div>
-            <p className="text-cream">© 2025 Altiplano • Made with ❤️ for the local-first community</p>
-          </div>
-        </div>
-      </footer>
+      </main>
     </div>
   )
 }

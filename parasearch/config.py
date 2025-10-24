@@ -7,7 +7,7 @@ import os
 
 # Ollama Configuration
 OLLAMA_URL = os.getenv("PARASEARCH_OLLAMA_URL", "http://localhost:11434")
-DEFAULT_MODEL = os.getenv("PARASEARCH_MODEL", "llama3.2")
+DEFAULT_MODEL = os.getenv("PARASEARCH_MODEL", "qwen2.5-coder:3b")
 
 # Server Configuration
 BACKEND_HOST = os.getenv("PARASEARCH_HOST", "0.0.0.0")

@@ -4,10 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Altiplano — Llama-Powered Parametric Search</title>
-    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <style>
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <style>
     :root{
       /* Altiplano palette (from the logo) */
       --cream: #fcf7ef;
@@ -68,7 +68,7 @@
     }
 
     /* Search */
-    .search-wrap{margin:60px 0 80px}
+    .search-wrap{margin:22px 0 28px}
     .search-container{
       background:var(--paper);
       border-radius:var(--radius-xl);
@@ -152,13 +152,13 @@
     }
     .suggestion-chip:hover{transform:translateY(-2px)}
 
-        /* Footer */
+    /* Footer */
     .footer{text-align:center;color:var(--muted);padding:40px 20px 20px;font-size:.88rem}
     .footer-links{display:flex;justify-content:center;gap:18px;margin-top:12px;flex-wrap:wrap}
     .footer-link{color:var(--brown-700);text-decoration:none;border-bottom:1px dotted #0000;transition:.2s}
     .footer-link:hover{border-bottom-color:currentColor}
 
-        /* Animations */
+    /* Animations */
     @keyframes fadeIn{from{opacity:0}to{opacity:1}}
     @keyframes slideUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
     @keyframes slideDown{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
@@ -170,17 +170,17 @@
       .result-title{font-size:1.05rem}
       .result-header{flex-direction:column;align-items:flex-start}
       .results-meta{flex-direction:column;gap:6px}
-        }
-    </style>
+    }
+  </style>
 </head>
 <body>
-    <div id="root"></div>
+  <div id="root"></div>
 
-    <script type="text/babel">
+  <script type="text/babel">
     const { useState } = React;
-        const API_URL = window.location.hostname === 'localhost' 
-            ? 'http://localhost:8000'
-            : window.location.origin;
+    const API_URL = window.location.hostname === 'localhost'
+      ? 'http://localhost:8000'
+      : window.location.origin;
 
     function App(){
       const [query,setQuery] = useState('');
@@ -190,14 +190,14 @@
       const [expandedResults,setExpanded] = useState(new Set());
       const [searchHistory,setHistory] = useState([]);
 
-            const exampleQueries = [
-                "Who was Leonardo da Vinci?",
-                "Explain quantum mechanics",
-                "History of the Roman Empire",
-                "How does photosynthesis work?",
-                "What is machine learning?",
-                "Ancient Egyptian pyramids"
-            ];
+      const exampleQueries = [
+        "Who was Leonardo da Vinci?",
+        "Explain quantum mechanics",
+        "History of the Roman Empire",
+        "How does photosynthesis work?",
+        "What is machine learning?",
+        "Ancient Egyptian pyramids"
+      ];
 
       const handleSearch = async (q = query) => {
         if(!q.trim()) return;
@@ -213,14 +213,14 @@
             throw new Error(e.detail || 'Search failed');
           }
           const data = await res.json();
-                    setResults(data);
+          setResults(data);
           setHistory(prev => [q, ...prev.filter(x=>x!==q)].slice(0,5));
         }catch(err){
-                    setError(err.message);
+          setError(err.message);
         }finally{
-                    setLoading(false);
-                }
-            };
+          setLoading(false);
+        }
+      };
 
       const toggleExpanded = (i)=>{
         const n = new Set(expandedResults);
@@ -231,84 +231,85 @@
       const cls = (c)=>{
         if(c>=0.7) return 'confidence-high';
         if(c>=0.4) return 'confidence-medium';
-                return 'confidence-low';
-            };
+        return 'confidence-low';
+      };
       const label = (c)=> `${Math.round(c*100)}% confident`;
 
-            return (
-                <div className="app">
-                    <header className="header">
+      return (
+        <div className="app">
+          <header className="header">
             <div className="brand">
+              <!-- Update src if your path differs -->
               <img src="/altiplano-graphic-mark-logo.svg" alt="Altiplano logo"/>
               <div className="wordmark">ALTIPLANO</div>
-                        </div>
-                        <div className="tagline">
+            </div>
+            <div className="tagline">
               Llama-powered parametric knowledge search
-                            <span className="beta-badge">BETA</span>
-                        </div>
-                    </header>
+              <span className="beta-badge">BETA</span>
+            </div>
+          </header>
 
           <div className="search-wrap">
-                    <div className="search-container">
+            <div className="search-container">
               <div className="search-pill">
                 <span className="mag" aria-hidden="true"></span>
                 <span>ALTIPLANO</span>
               </div>
-                        <input
-                            className="search-input"
+              <input
+                className="search-input"
                 placeholder="Ask anything… (uses model knowledge only)"
-                            value={query}
+                value={query}
                 onChange={(e)=>setQuery(e.target.value)}
                 onKeyDown={(e)=> e.key==='Enter' && handleSearch()}
-                            disabled={loading}
-                        />
+                disabled={loading}
+              />
               <button className="search-button" onClick={()=>handleSearch()} disabled={loading || !query.trim()}>
                 {loading ? 'Searching…' : 'Search'}
-                        </button>
+              </button>
             </div>
-                    </div>
+          </div>
 
-                    {loading && (
-                        <div className="loading">
-                            <div className="spinner"></div>
+          {loading && (
+            <div className="loading">
+              <div className="spinner"></div>
               <div>Traversing the high plains of knowledge…</div>
-                        </div>
-                    )}
+            </div>
+          )}
 
-                    {error && (
-                        <div className="warning-banner">
+          {error && (
+            <div className="warning-banner">
               <strong>⚠️ Error:</strong> {error}
-                        </div>
-                    )}
+            </div>
+          )}
 
-                    {results && (
-                        <div className="results-container">
-                            {results.warning && (
-                                <div className="warning-banner">
+          {results && (
+            <div className="results-container">
+              {results.warning && (
+                <div className="warning-banner">
                   <span>💡</span> {results.warning}
-                                </div>
-                            )}
+                </div>
+              )}
 
-                            <div className="results-header">
-                                <div className="results-info">
-                                    Found {results.results.length} results for "{results.query}"
-                                </div>
-                                <div className="results-meta">
+              <div className="results-header">
+                <div className="results-info">
+                  Found {results.results.length} results for "{results.query}"
+                </div>
+                <div className="results-meta">
                   <div className="meta-item">⏱️ {results.processing_time}s</div>
                   <div className="meta-item">🧠 {results.model_used}</div>
                   <div className="meta-item">📅 {results.knowledge_cutoff}</div>
-                                </div>
-                            </div>
+                </div>
+              </div>
 
               {results.results.map((r, i)=>(
                 <div key={i} className="result-card">
-                                    <div className="result-header">
+                  <div className="result-header">
                     <div className="result-title">{r.title}</div>
-                                        <div className="result-badges">
+                    <div className="result-badges">
                       <div className={`confidence-badge ${cls(r.confidence)}`}>{label(r.confidence)}</div>
                       <div className="relevance-badge">{r.relevance_score}/10</div>
-                                            </div>
-                                        </div>
+                    </div>
+                  </div>
                   <div className="result-snippet">{r.snippet}</div>
                   {r.expanded_content && (
                     <>
@@ -317,47 +318,56 @@
                       )}
                       <button className="expand-button" onClick={()=>toggleExpanded(i)}>
                         {expandedResults.has(i) ? '▲ Show Less' : '▼ Learn More'}
-                                            </button>
-                                        </>
-                                    )}
+                      </button>
+                    </>
+                  )}
                   {r.hallucination_risk !== 'low' && (
                     <div className={`risk-indicator ${r.hallucination_risk==='high' ? 'risk-high':''}`}>
                       {r.hallucination_risk==='high' ? '⚠️' : 'ℹ️'}
                       Uncertainty level: {r.hallucination_risk}
-                                        </div>
-                                    )}
-                                </div>
-                            ))}
-                        </div>
-                    )}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
 
-                    {!loading && !results && !error && (
-                        <div className="empty-state">
+          {!loading && !results && !error && (
+            <div className="empty-state">
+              <div className="empty-logo">
+                <div className="round">
+                  <span className="mag" style="display:block;transform:scale(1.2)"></span>
+                </div>
+              </div>
+              <div className="empty-title">Welcome to Altiplano</div>
+              <div className="empty-subtitle">
+                Searches use only the model's internal knowledge — no web, no external DBs.
+              </div>
               <div className="suggestions" style={{marginTop:'20px'}}>
                 <div style={{width:'100%',marginBottom:'8px',color:'var(--muted)'}}>Try:</div>
                 {exampleQueries.map((ex,idx)=>(
                   <div key={idx} className="suggestion-chip" onClick={()=>{setQuery(ex);handleSearch(ex);}}>
                     {ex}
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
 
-                    <footer className="footer">
+          <footer className="footer">
             <div>⚡ Local LLM • No web search • No data collection • Offline-capable</div>
-            <div style={{marginTop:'10px',fontSize:'.82rem'}}>Knowledge cutoff: ~January 2025 • Results reflect training data</div>
-                        <div className="footer-links">
+            <div style="margin-top:10px;font-size:.82rem">Knowledge cutoff: ~January 2025 • Results reflect training data</div>
+            <div className="footer-links">
               <a className="footer-link" href="https://github.com/bohselecta/altiplano" target="_blank">GitHub</a>
               <a className="footer-link" href="https://altiplano-landing.vercel.app/" target="_blank">About</a>
               <a className="footer-link" href="https://altiplano-landing.vercel.app/" target="_blank">Limitations</a>
-                        </div>
-                    </footer>
-                </div>
-            );
-        }
+            </div>
+          </footer>
+        </div>
+      );
+    }
 
     ReactDOM.render(<App/>, document.getElementById('root'));
-    </script>
+  </script>
 </body>
 </html>
