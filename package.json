@@ -1,26 +1,13 @@
 {
-  "name": "altiplano",
-  "version": "0.1.0",
-  "private": true,
+  "name": "altiplano-static",
+  "version": "1.0.0",
+  "description": "Altiplano - Search Your Knowledge, Not The Web",
+  "main": "index.html",
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "eslint"
+    "build": "echo 'Static site - no build needed'",
+    "start": "echo 'Static site - no start needed'"
   },
-  "dependencies": {
-    "react": "19.2.0",
-    "react-dom": "19.2.0",
-    "next": "16.0.0"
-  },
-  "devDependencies": {
-    "typescript": "^5",
-    "@types/node": "^20",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
-    "@tailwindcss/postcss": "^4",
-    "tailwindcss": "^4",
-    "eslint": "^9",
-    "eslint-config-next": "16.0.0"
-  }
+  "keywords": ["search engine", "AI", "local-first", "privacy", "offline"],
+  "author": "Altiplano",
+  "license": "MIT"
 }

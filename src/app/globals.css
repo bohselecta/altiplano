@@ -2,178 +2,30 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Simple Altiplano Styling - Based on Original HTML */
+/* Altiplano Custom Styles */
 
-* {
+@layer base {
+  * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-}
+  }
 
-:root {
-    --brown-dark: #3D2817;
-    --brown-mid: #5C4033;
-    --orange: #E67E22;
-    --orange-light: #F39C12;
-    --yellow: #F4A442;
-    --cream: #F5E6D3;
-    --cream-light: #FAF3E8;
-    --white: #FFFFFF;
-}
+  html {
+    scroll-behavior: smooth;
+  }
 
-body {
+  body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-    background: linear-gradient(135deg, var(--cream-light) 0%, var(--cream) 100%);
-    color: var(--brown-dark);
+    background: linear-gradient(135deg, #FAF3E8 0%, #F5E6D3 100%);
+    color: #3D2817;
     line-height: 1.6;
     overflow-x: hidden;
+  }
 }
 
-/* Simple Typography */
-h1 {
-    font-size: 4rem;
-    font-weight: 800;
-    color: var(--brown-dark);
-    margin-bottom: 1.5rem;
-    letter-spacing: -1px;
-}
-
-h2 {
-    font-size: 2.5rem;
-    color: var(--brown-dark);
-    margin-bottom: 2rem;
-    font-weight: 700;
-}
-
-h3 {
-    font-size: 1.4rem;
-    color: var(--brown-dark);
-    margin-bottom: 1rem;
-    font-weight: 600;
-}
-
-h4 {
-    font-size: 1.2rem;
-    color: var(--orange);
-    margin-bottom: 0.5rem;
-    font-weight: 600;
-}
-
-p {
-    font-size: 1rem;
-    color: var(--brown-mid);
-    margin-bottom: 1rem;
-    line-height: 1.8;
-}
-
-/* Simple utility classes */
-.text-hero {
-    font-size: 4rem;
-    font-weight: 800;
-    color: var(--brown-dark);
-    letter-spacing: -1px;
-}
-
-.text-tagline {
-    font-size: 1.5rem;
-    color: var(--brown-mid);
-    max-width: 600px;
-    margin: 0 auto;
-}
-
-.text-section {
-    font-size: 2.5rem;
-    color: var(--brown-dark);
-    font-weight: 700;
-}
-
-.text-feature {
-    font-size: 1.4rem;
-    color: var(--brown-dark);
-    font-weight: 600;
-}
-
-.text-large {
-    font-size: 1.2rem;
-    color: var(--brown-mid);
-    line-height: 2;
-}
-
-.text-accent {
-    color: var(--orange);
-}
-
-.text-brown-dark {
-    color: var(--brown-dark);
-}
-
-.text-brown-mid {
-    color: var(--brown-mid);
-}
-
-.text-orange {
-    color: var(--orange);
-}
-
-.text-cream {
-    color: var(--cream);
-}
-
-.bg-brown-dark {
-    background-color: var(--brown-dark);
-}
-
-.bg-gradient-orange {
-    background: linear-gradient(135deg, var(--orange) 0%, var(--orange-light) 100%);
-}
-
-.bg-gradient-cream {
-    background: linear-gradient(135deg, var(--cream-light) 0%, var(--cream) 100%);
-}
-
-.border-brown-mid-20 {
-    border-color: rgba(92, 64, 51, 0.2);
-}
-
-.border-orange-30 {
-    border-color: rgba(230, 126, 34, 0.3);
-}
-
-.hover-orange:hover {
-    color: var(--orange);
-}
-
-.hover-golden:hover {
-    color: var(--yellow);
-}
-
-.hover-bg-orange-20:hover {
-    background-color: rgba(230, 126, 34, 0.2);
-}
-
-.hover-gradient-orange:hover {
-    background: linear-gradient(135deg, rgba(230, 126, 34, 0.9) 0%, rgba(243, 156, 18, 0.9) 100%);
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-    h1 {
-        font-size: 2.5rem;
-    }
-    
-    h2 {
-        font-size: 2rem;
-    }
-    
-    .text-hero {
-        font-size: 2.5rem;
-    }
-    
-    .text-section {
-        font-size: 2rem;
-    }
-    
-    .text-tagline {
-        font-size: 1.2rem;
-    }
+@layer utilities {
+  .text-secondary {
+    color: #5C4033;
+  }
 }
