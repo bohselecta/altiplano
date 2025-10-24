@@ -31,15 +31,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body style={{
-        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif',
-        fontSize: '16px',
-        lineHeight: '1.6',
-        color: '#5C4033',
-        backgroundColor: '#F5E6D3',
-        WebkitFontSmoothing: 'antialiased',
-        MozOsxFontSmoothing: 'grayscale'
-      }}>
+      <body>
         {children}
       </body>
     </html>
