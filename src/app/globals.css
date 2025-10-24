@@ -1,4 +1,6 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 /* ALTIPLANO TYPOGRAPHY SYSTEM - Complete Implementation */
 
@@ -31,172 +33,172 @@ body {
     background: #F5E6D3;
 }
 
-/* 4. Typography Scale - Desktop */
-h1 { 
-    font-size: 4rem;           /* 64px */
-    font-weight: 800;          /* Extra bold */
-    letter-spacing: -1px;      /* Tighter for large text */
-    line-height: 1.1;          /* Tight for impact */
-    color: var(--text-primary);
-    margin-bottom: 1.5rem;
+/* 4. Typography Scale - Desktop (High Specificity) */
+body h1 { 
+    font-size: 4rem !important;           /* 64px */
+    font-weight: 800 !important;          /* Extra bold */
+    letter-spacing: -1px !important;      /* Tighter for large text */
+    line-height: 1.1 !important;          /* Tight for impact */
+    color: var(--text-primary) !important;
+    margin-bottom: 1.5rem !important;
 }
 
-h2 { 
-    font-size: 2.5rem;         /* 40px */
-    font-weight: 700;          /* Bold */
-    letter-spacing: -0.5px;    /* Slightly tighter */
-    line-height: 1.2;
-    color: var(--text-primary);
-    margin-bottom: 2rem;
+body h2 { 
+    font-size: 2.5rem !important;         /* 40px */
+    font-weight: 700 !important;          /* Bold */
+    letter-spacing: -0.5px !important;    /* Slightly tighter */
+    line-height: 1.2 !important;
+    color: var(--text-primary) !important;
+    margin-bottom: 2rem !important;
 }
 
-h3 { 
-    font-size: 1.4rem;         /* 22.4px */
-    font-weight: 600;          /* Semi-bold */
-    letter-spacing: 0;         /* Normal */
-    line-height: 1.3;
-    color: var(--text-primary);
-    margin-bottom: 1rem;
+body h3 { 
+    font-size: 1.4rem !important;         /* 22.4px */
+    font-weight: 600 !important;          /* Semi-bold */
+    letter-spacing: 0 !important;         /* Normal */
+    line-height: 1.3 !important;
+    color: var(--text-primary) !important;
+    margin-bottom: 1rem !important;
 }
 
-h4 { 
-    font-size: 1.2rem;         /* 19.2px */
-    font-weight: 600;
-    letter-spacing: 0;
-    line-height: 1.4;
-    color: var(--text-accent); /* Orange for subsections */
-    margin-bottom: 0.5rem;
+body h4 { 
+    font-size: 1.2rem !important;         /* 19.2px */
+    font-weight: 600 !important;
+    letter-spacing: 0 !important;
+    line-height: 1.4 !important;
+    color: var(--text-accent) !important; /* Orange for subsections */
+    margin-bottom: 0.5rem !important;
 }
 
-p { 
-    font-size: 1rem;           /* 16px */
-    font-weight: 400;          /* Regular */
-    letter-spacing: 0;
-    line-height: 1.8;          /* Generous for body text */
-    color: var(--text-secondary);
-    margin-bottom: 1rem;
+body p { 
+    font-size: 1rem !important;           /* 16px */
+    font-weight: 400 !important;          /* Regular */
+    letter-spacing: 0 !important;
+    line-height: 1.8 !important;          /* Generous for body text */
+    color: var(--text-secondary) !important;
+    margin-bottom: 1rem !important;
 }
 
-/* 5. Utility Classes */
+/* 5. Utility Classes (High Specificity) */
 .text-hero { 
-    font-size: 4rem; 
-    font-weight: 800; 
-    letter-spacing: -1px; 
-    line-height: 1.1; 
-    color: var(--text-primary);
+    font-size: 4rem !important; 
+    font-weight: 800 !important; 
+    letter-spacing: -1px !important; 
+    line-height: 1.1 !important; 
+    color: var(--text-primary) !important;
 }
 
 .text-tagline { 
-    font-size: 1.5rem;         /* 24px */
-    font-weight: 400;
-    letter-spacing: 0;
-    line-height: 1.6;
-    color: var(--text-secondary);
+    font-size: 1.5rem !important;         /* 24px */
+    font-weight: 400 !important;
+    letter-spacing: 0 !important;
+    line-height: 1.6 !important;
+    color: var(--text-secondary) !important;
 }
 
 .text-section { 
-    font-size: 2.5rem; 
-    font-weight: 700; 
-    letter-spacing: -0.5px; 
-    line-height: 1.2; 
-    color: var(--text-primary);
+    font-size: 2.5rem !important; 
+    font-weight: 700 !important; 
+    letter-spacing: -0.5px !important; 
+    line-height: 1.2 !important; 
+    color: var(--text-primary) !important;
 }
 
 .text-feature { 
-    font-size: 1.4rem; 
-    font-weight: 600; 
-    line-height: 1.3; 
-    color: var(--text-primary);
+    font-size: 1.4rem !important; 
+    font-weight: 600 !important; 
+    line-height: 1.3 !important; 
+    color: var(--text-primary) !important;
 }
 
 .text-large { 
-    font-size: 1.2rem;         /* 19.2px */
-    font-weight: 400;
-    letter-spacing: 0;
-    line-height: 2;            /* Extra loose for readability */
-    color: var(--text-secondary);
+    font-size: 1.2rem !important;         /* 19.2px */
+    font-weight: 400 !important;
+    letter-spacing: 0 !important;
+    line-height: 2 !important;            /* Extra loose for readability */
+    color: var(--text-secondary) !important;
 }
 
 .text-medium { 
-    font-size: 1.2rem;         /* 19.2px */
-    font-weight: 400;
-    letter-spacing: 0;
-    line-height: 2;
-    color: var(--text-secondary);
+    font-size: 1.2rem !important;         /* 19.2px */
+    font-weight: 400 !important;
+    letter-spacing: 0 !important;
+    line-height: 2 !important;
+    color: var(--text-secondary) !important;
 }
 
 .text-small { 
-    font-size: 0.9rem;         /* 14.4px */
-    font-weight: 400;
-    letter-spacing: 0;
-    line-height: 1.6;
-    color: var(--text-secondary);
+    font-size: 0.9rem !important;         /* 14.4px */
+    font-weight: 400 !important;
+    letter-spacing: 0 !important;
+    line-height: 1.6 !important;
+    color: var(--text-secondary) !important;
 }
 
 .text-accent { 
-    color: var(--text-accent); 
+    color: var(--text-accent) !important; 
 }
 
 .text-primary { 
-    color: var(--text-primary); 
+    color: var(--text-primary) !important; 
 }
 
 .text-secondary { 
-    color: var(--text-secondary); 
+    color: var(--text-secondary) !important; 
 }
 
 .text-light { 
-    color: var(--text-light); 
+    color: var(--text-light) !important; 
 }
 
-/* 6. Responsive Typography - Mobile */
+/* 6. Responsive Typography - Mobile (High Specificity) */
 @media (max-width: 768px) {
-    h1 { 
-        font-size: 2.5rem;         /* 40px - scaled down */
-        font-weight: 800;
-        letter-spacing: -0.5px;
-        line-height: 1.1;
+    body h1 { 
+        font-size: 2.5rem !important;         /* 40px - scaled down */
+        font-weight: 800 !important;
+        letter-spacing: -0.5px !important;
+        line-height: 1.1 !important;
     }
     
-    h2 { 
-        font-size: 2rem;           /* 32px */
+    body h2 { 
+        font-size: 2rem !important;           /* 32px */
     }
     
-    h3 { 
-        font-size: 1.25rem;        /* 20px */
+    body h3 { 
+        font-size: 1.25rem !important;        /* 20px */
     }
     
     .text-hero { 
-        font-size: 2.5rem; 
-        letter-spacing: -0.5px; 
+        font-size: 2.5rem !important; 
+        letter-spacing: -0.5px !important; 
     }
     
     .text-tagline { 
-        font-size: 1.2rem;         /* 19.2px */
+        font-size: 1.2rem !important;         /* 19.2px */
     }
     
     .text-section { 
-        font-size: 2rem; 
+        font-size: 2rem !important; 
     }
     
     .text-large { 
-        font-size: 1.1rem; 
+        font-size: 1.1rem !important; 
     }
 }
 
 @media (max-width: 480px) {
-    h1 { 
-        font-size: 2rem;           /* 32px */
-        letter-spacing: -0.25px;
+    body h1 { 
+        font-size: 2rem !important;           /* 32px */
+        letter-spacing: -0.25px !important;
     }
     
-    h2 { 
-        font-size: 1.75rem;        /* 28px */
+    body h2 { 
+        font-size: 1.75rem !important;        /* 28px */
     }
     
     .text-hero { 
-        font-size: 2rem; 
-        letter-spacing: -0.25px; 
+        font-size: 2rem !important; 
+        letter-spacing: -0.25px !important; 
     }
 }
 
